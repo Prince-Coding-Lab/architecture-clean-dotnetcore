@@ -31,9 +31,10 @@ namespace SuperStore.Core.Services
            
         }
 
-        public async Task GetStoresAsync()
+        public async Task<IReadOnlyList<Store>> GetStoresAsync()
         {
-            throw new NotImplementedException();
+            var result = await _storeRepository.ListAllAsync();
+            return result;
         }
 
         public async Task UpdateStoreAsync(Store store,int storeId)

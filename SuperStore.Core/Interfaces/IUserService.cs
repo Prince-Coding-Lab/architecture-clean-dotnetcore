@@ -10,6 +10,8 @@ namespace SuperStore.Core.Interfaces
     {
         Task<User> CreateUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
-       // Task<User> DeleteUserAsync(User user);
+        Task<bool> UserExistsAsync(string userName);
+        Task<User> LoginAsync(string username, string password);
+        // Task<User> DeleteUserAsync(User user);
     }
 }

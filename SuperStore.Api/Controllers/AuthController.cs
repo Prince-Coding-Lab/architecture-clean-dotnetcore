@@ -23,14 +23,42 @@ namespace SuperStore.Api.Controllers
             _userService = userService;
             _mapper = mapper;
         }
-        public async Task<IActionResult> PostAsync(User userDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(User userDto)
         {
-            // var user = _mapper.Map<User>(userDto);
-            var user  =  await _userService.CreateUserAsync(userDto);
+         
+            var user = await _userService.LoginAsync(userDto.UserName, userDto.Password);
             var response = new SingleResponse<User>();
-            // var userForDetailedDto = _mapper.Map<UserDto>(response);
-            response.Model = user;
-            response.Message = "success";
+            if (user == null)
+            {
+                response.Message = "Username or password is incorrect";
+            }
+            else
+            {
+                response.Model = user;
+                response.Message = "success";
+            }
+            return response.ToHttpResponse();
+        }
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync(UserDto userDto)
+        {
+            var userToCreate = _mapper.Map<User>(userDto);
+            var response = new SingleResponse<UserDto>();
+            if (await _userService.UserExistsAsync(userDto.UserName))
+            {
+                response.Message = "Username already exists";
+                response.Model = userDto;
+            }
+            else
+            {
+                var user = await _userService.CreateUserAsync(userToCreate);
+
+
+                UserDto userForDetailedDto = _mapper.Map<UserDto>(response);
+                response.Model = userForDetailedDto;
+                response.Message = "success";
+            }
             return response.ToHttpResponse();
         }
     }

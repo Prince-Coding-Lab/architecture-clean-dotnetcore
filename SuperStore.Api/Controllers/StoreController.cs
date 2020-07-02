@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SuperStore.Api.Models;
 using SuperStore.Core.Entities;
 using SuperStore.Core.Interfaces;
 
@@ -24,8 +25,14 @@ namespace SuperStore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync(Store store)
         {
-            var user = await _storeService.CreateStoreAsync(store);
-            return Ok("success");
+            var result = await _storeService.CreateStoreAsync(store);
+
+            var response = new SingleResponse<Store>();
+
+            response.Model = result;
+            response.Message = "success";
+
+            return response.ToHttpResponse();
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Store store,int id)
@@ -41,9 +48,14 @@ namespace SuperStore.Api.Controllers
             return Ok("success");
         }
         [HttpGet]
-        public IActionResult GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
-            return Ok("success");
+            var response = new SingleResponse<IReadOnlyList<Store>>();
+
+            response.Model = await _storeService.GetStoresAsync();
+            response.Message = "success";
+
+            return response.ToHttpResponse();
         }
         [HttpGet("getbyid/{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)

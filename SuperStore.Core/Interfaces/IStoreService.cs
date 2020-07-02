@@ -12,6 +12,6 @@ namespace SuperStore.Core.Interfaces
         Task UpdateStoreAsync(Store store, int storeId);
         Task DeleteStoreAsync(int storeId);
         Task<Store> GetStoreByIdAsync(int storeId);
-        Task GetStoresAsync();
+        Task<IReadOnlyList<Store>> GetStoresAsync();
     }
 }

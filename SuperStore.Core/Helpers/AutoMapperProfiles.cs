@@ -11,8 +11,7 @@ namespace SuperStore.Core.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>().ReverseMap(); 
         }
     }
 }

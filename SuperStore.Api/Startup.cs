@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SuperStore.Core.Entities;
 using SuperStore.Core.Interfaces;
 using SuperStore.Core.Services;
 using SuperStore.Infrastructure.data;
@@ -37,7 +38,7 @@ namespace SuperStore.Api
             //services.AddDbContext<SuperStoreContext>(c =>
             //    c.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             //    );
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Item).Assembly);
             services.AddDbContext<SuperStoreContext>(options =>
                         options.UseSqlServer(
     Configuration.GetConnectionString("DefaultConnection"),
@@ -46,7 +47,7 @@ namespace SuperStore.Api
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IStoreService, StoreService>();
-           
+            services.AddCors();
             //services.AddAutoMapper(typeof(SuperStore.Api).Assembly);
             services.AddHealthChecks();
             services.AddAuthorization();
@@ -64,7 +65,7 @@ namespace SuperStore.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
